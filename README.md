@@ -48,12 +48,28 @@ In this, we choose a subset of states x (or equations/rows of Q) to use, only in
 ## Known P
 Assuming the exact stationary distribution P is known, the main LP equation reduces to a set of linear equality constraints, with a linear objective, for the k_{r} variables:
 
-min k_{r}
+min/max k_{r}
 s.t. \sum_{r=1}^{R} k_{r} * Q_{r} * P = 0
     k_{r} > 0
 
 Given a sufficient number of equations (for the number of unknowns) the solution should be the exact k_{r} values used in simulation.
 
 ## Unkown P: bounds
+If we instead have bounds, e.g. bootstrap CI's, on the true values p(x) then we must include them as variables in the LP: P_{l} < P < P_{u}. However, this introduces non-linear terms into the Qp = 0 constraint: namely k_{r} * P, cross terms of k_{r} * p(x). To linearise we introduce z variables: z_{r} = k_{r} * P, and write the constraints in terms of z's and k's:
+
+min/max k_{r}
+s.t. \sum_{r=1}^{R} z_{r} * Q_{r} = 0
+    k_{r} * P_{l} < z_{r} < k_{r} * P_{u}
+    k_{r} > 0
+
+(Note: this is possible because only cross terms are present, there are no quadratic terms e.g. p(x)^2)
+
+## Packages
+PuLP was inconvenient, but CVXPY has very nice vector and matrix variable support, and makes it easy to solve both the min and max problem and report the outcome (optimal/unbounded/infeasible). The code shows birth-death (M/M/1 queue: death rate = 1) and schlogl examples.
+
+# Birth Death Reaction
+Investigate a simple birth-death process of one species, look at relationship of variance in estimates with true value, and the best state space truncations to use.
+
+
 
 
