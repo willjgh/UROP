@@ -28,3 +28,32 @@ However, this is just a point estimate with no error guarantees. A better estima
 - Bootstrap: sample with replacement to obtain N bootstrap samples, each of size n
 - calculate point estimate of stationary distribution for each bootstrap sample (proportions of selected states within the sample)
 - Confidence Intervals: for each state have N estimates of stationary probaility, use e.g. 97.5% and 2.5% quantiles for 95% CI for true prob.
+
+Plots can be produced to show histograms of stationary estimates along with CI bounds, for each state. 
+
+Introductory analysis of variance using width of CI is shown, but expanded later.
+
+# Linear Prog
+Initial investigation into using packages to solve LP optimization problems, and formulating Qp = 0 systems to solve for parameters.
+
+## LP
+The true statinonary distribution p satisfies Qp = 0, where Q is the rate matrix (or generator G) of the chain/reaction system containing the reaction rate constants k_{r}: parameters that we wish to infer. This can be decomposed into a sum of constant Q_{r} matrices:
+Qp = \sum_{r=1}^{R} k_{r} * Q_{r} * P = 0
+#### Outer Approximation
+The true reaction rate constants k_{r} must satisfy this equation (define as membership of a set S), which can then be used as a constraint for LP to find upper and lower bounds via min and max of k_{r}. The solution bounds provide an "outer approximation": a larger, more conservative set, containing the true set of solutions, which can then be refined, hopefully approcahing the true set of k_{r} values.
+### Infinite equations
+The state space of species in reaction (e.g. number of molecules) is generally infinite (0,1,2,...), giving an infinite system of equations (infinite dim Q). However, we cannot make use of all of them, nor do we need to, using *state space truncations*.
+In this, we choose a subset of states x (or equations/rows of Q) to use, only including equations involving those P(x). Initially we use the first few x's: 0,1,2,... but we will later investigate what the best truncations to use are, and how this depends on context.
+
+## Known P
+Assuming the exact stationary distribution P is known, the main LP equation reduces to a set of linear equality constraints, with a linear objective, for the k_{r} variables:
+
+min k_{r}
+s.t. \sum_{r=1}^{R} k_{r} * Q_{r} * P = 0
+    k_{r} > 0
+
+Given a sufficient number of equations (for the number of unknowns) the solution should be the exact k_{r} values used in simulation.
+
+## Unkown P: bounds
+
+
