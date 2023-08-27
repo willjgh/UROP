@@ -70,6 +70,23 @@ PuLP was inconvenient, but CVXPY has very nice vector and matrix variable suppor
 # Birth Death Reaction
 Investigate a simple birth-death process of one species, look at relationship of variance in estimates with true value, and the best state space truncations to use.
 
+## Reaction
+
+\empty -{k1}-> M
+
+M -{k2}-> \empty
+
+Molecules of M are produced with a rate of k1 and decay a rate of k2 (per molecule!). The stationary distribution is Poisson(k1 / k2) (e.g. p(x) = P(X = k) where X ~ Poi(k1/k2)). 
+
+Code to simulate sample paths of the reaction, and to find bootstrap confidence intervals for stationary distribution values is provided.
+
+## Confidence Intervals: width v true value
+
+The width of each bootstrap CI is a measure of the variance/sampling error of the estimate of the stationary distribution p(x), but how does this relate to the true value of p(x)?
+
+Plotting CI width against p(x) for a selection of states x and a range of parameter values (k1, k2) shows that width \prop p(x) * (1 - p(x)). However, the raw width is a measure of abosolute error: when sampling even 1000 final states for a state of prob 0.5 we would expect a deviation of around 450-550, so the CI width could vary by ~0.1, but for a state of prob 0.005 even with a large variation in the sample e.g. 0 to 10 the CI width would only vary by ~0.01. So we also consider the relative error: CI width / true which decreases as p(x) increases. This is perhaps more intuitive; as the true prob increases to 1, we observe the state more often and so have more information, whereas as the prob decreases to 0 we observe it less and less, giving less information with which to estimate (in the extreme case of p(x) = 0, we will never observe the state, so we estimate 0 but with no degree of uncertainty, and if the true value was actually e.g. 0.0001 we would also be unsure). However, we see the relative error is \prop 1 / p, with a rapid decrease from 0 to ~0.1, levelling off as sufficient events are observed to estimate well.
+
+
 
 
 
