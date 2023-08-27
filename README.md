@@ -87,6 +87,17 @@ The width of each bootstrap CI is a measure of the variance/sampling error of th
 Plotting CI width against p(x) for a selection of states x and a range of parameter values (k1, k2) shows that width \prop p(x) * (1 - p(x)). However, the raw width is a measure of abosolute error: when sampling even 1000 final states for a state of prob 0.5 we would expect a deviation of around 450-550, so the CI width could vary by ~0.1, but for a state of prob 0.005 even with a large variation in the sample e.g. 0 to 10 the CI width would only vary by ~0.01. So we also consider the relative error: CI width / true which decreases as p(x) increases. This is perhaps more intuitive; as the true prob increases to 1, we observe the state more often and so have more information, whereas as the prob decreases to 0 we observe it less and less, giving less information with which to estimate (in the extreme case of p(x) = 0, we will never observe the state, so we estimate 0 but with no degree of uncertainty, and if the true value was actually e.g. 0.0001 we would also be unsure). However, we see the relative error is \prop 1 / p, with a rapid decrease from 0 to ~0.1, levelling off as sufficient events are observed to estimate well.
 
 
+## State Space Truncations: What are the best equations to use?
+The main constraint of the LP is the equation \sum_{r=1}^{R} Q_{r} * z_{r} = 0, where Q_{r} are constant matrices of bi/tri/etc-diagonal structure. The nth equation/row of this system involes p(n - 1), p(n) and p(n + 1) (due to upper and lower bidiagonal Q_{r}'s). Since the width of CI's for the estimates of these values varies, we can ask which equations, and so which states will give the tightest or most accurate solution bounds. Of course in practice we can use as many equations as possible, but some states may have confidence intervals that do not include the true value (as seen in the previous section with low prob states having greater variability) leading to infeasible LPs, so finding the best states to use can help avoid those that may cause problems.
+
+Code is provided to solve birth death LPs given upper and lower confidence bounds, as well as a list of equations to use (note: the nth equation involves p(n-1),p(n),p(n+1) as seen, so the bounds must be provided up to p(n+1)).
+
+### Best Single Equation
+Solving the LP using only a single equation/row of Qp = 0: simulate CI bounds, find solution interval using each equation alone (up to a given value) and plot: plot width vs equation, and also visual intervals.
+
+See that the first equations, espcially 1st, seem to give the best bounds, even for distributions centered around higher states than appear in them. Also see that the stationary distribution (Poi(k1/k2)) can be bimodal for integer parameters, leading to no upper bounds on equations involving modal states, even if they should contain the most information (p(x)'s equal so cancel out???).
+
+To find the best equations repeat this many times, recording the equation of minimum width, then plot the distribution of best equations. 
 
 
 
