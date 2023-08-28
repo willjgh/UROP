@@ -97,7 +97,19 @@ Solving the LP using only a single equation/row of Qp = 0: simulate CI bounds, f
 
 See that the first equations, espcially 1st, seem to give the best bounds, even for distributions centered around higher states than appear in them. Also see that the stationary distribution (Poi(k1/k2)) can be bimodal for integer parameters, leading to no upper bounds on equations involving modal states, even if they should contain the most information (p(x)'s equal so cancel out???).
 
-To find the best equations repeat this many times, recording the equation of minimum width, then plot the distribution of best equations. 
+To find the best equations repeat this many times, recording the equation of minimum width, then plot the distribution of best equations.
+
+The distributions produced mostly peak at 0: likely due to the fewer terms in the 1st equation, as well as the non-negative number of molecules leading to higher p(0) values, reducing the CI width as seen before. However, even with stationary distributions centered around e.g. 1, the best equation distribution produces small peaks at e.g. equations 10 - 12, which is unexpected as these equations are not expected to contain information.
+
+### Multiple equations
+Given simulated data, solve the LP using a single equation and find the solution interval then repeat, adding an extra row/equation each time. Code is provided to do this starting with the 1st equation adding until the nth, and the nth equation adding until the first.
+
+In general there is a sharp decrease in solution width when adding the first few equations, then a shallow decrease until the equation containing the mode states of the distribution, where the solution width stagnates and does not improve with additional information. The same is broadly true of adding equations in descending order, but the 1st equation still seems to provide extra information, again perhaps due to fewer terms or a smaller CI.
+
+# Gene Expression
+
+# Non-Linear Programming
+
 
 
 
