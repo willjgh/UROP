@@ -107,8 +107,14 @@ Given simulated data, solve the LP using a single equation and find the solution
 In general there is a sharp decrease in solution width when adding the first few equations, then a shallow decrease until the equation containing the mode states of the distribution, where the solution width stagnates and does not improve with additional information. The same is broadly true of adding equations in descending order, but the 1st equation still seems to provide extra information, again perhaps due to fewer terms or a smaller CI.
 
 # Gene Expression
+Code exploring simulation and solution of a model for gene expression.
 
 # Non-Linear Programming
+So far we have considered only linear programs, formed from the reaction systems by using z_{r} = k_{r} * P variables to linearise the bilinear constraints, but we can also directly use these bilinear constraints to form a bilinear program. However, these constraints are non-convex (Q_{r} matrices are not symmetric, let alone PSD etc) and so we cannot use CVXPY which only deals with convex problems and instead work with scipy.optimize. Since we have lost convexity there is now no guarantee of global optimality, and we must be careful to avoid becoming stuck in local optima.
+
+This approach works well on the birth-death reaction, giving mostly tight and accurate bounds on the birth rate constant, although sometimes the bounds are innacurate and do not contain the true value.
+
+However, when attempting the gene expression model the results are poor with most solution bounds very far from the true values, perhaps due to a more complex landscape and the prescence of many local minima and maxima.
 
 
 
